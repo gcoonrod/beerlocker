@@ -1,11 +1,12 @@
 var Beer = require('../models/beer');
 
-exports.postBeers = function(request, response){
+exports.postBeers = function(request, response) {
     var beer = new Beer();
 
     beer.name = request.body.beer.name;
     beer.type = request.body.beer.type;
     beer.quantity = request.body.beer.quantity;
+    beer.userId = request.user._id;
 
     beer.save(function(error) {
         if (error) {
@@ -20,7 +21,9 @@ exports.postBeers = function(request, response){
 };
 
 exports.getBeers = function(request, response) {
-    Beer.find(function(error, beers) {
+    Beer.find({
+        userId: request.user._id
+    }, function(error, beers) {
         if (error) {
             response.send(error);
         }
@@ -30,7 +33,10 @@ exports.getBeers = function(request, response) {
 };
 
 exports.getBeer = function(request, response) {
-    Beer.findById(request.params.beer_id, function(error, beer) {
+    Beer.find({
+        userId: request.user._id,
+        _id: request.params.beer_id
+    }, function(error, beer) {
         if (error) {
             response.send(error);
         }
@@ -40,26 +46,28 @@ exports.getBeer = function(request, response) {
 };
 
 exports.putBeer = function(request, response) {
-    Beer.findById(request.params.beer_id, function(error, beer) {
+    Beer.update({
+        userId: request.user._id,
+        _id: request.params.beer_id
+    }, {
+        quantity: request.body.beer.quantity
+    }, function(error, num, raw) {
         if (error) {
             response.send(error);
         }
 
-        beer.quantity = request.body.beer.quantity;
-
-        beer.save(function(error) {
-            if (error) {
-                response.send(error);
-            }
-
-            response.json(beer);
+        response.json({
+            message: num + ' updated'
         });
     });
 };
 
-exports.deleteBeer = function(request, response){
-    Beer.findByIdAndRemove(request.params.beer_id, function(error){
-        if(error){
+exports.deleteBeer = function(request, response) {
+    Beer.remove({
+        userId: request.user._id,
+        _id: request.params.beer_id
+    }, function(error) {
+        if (error) {
             response.send(error);
         }
 
