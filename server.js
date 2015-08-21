@@ -2,7 +2,8 @@
 var express = require('express'),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
-    beerController = require('./controllers/beer');
+    beerController = require('./controllers/beer'),
+    userController = require('./controllers/user');
 
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/beerlocker');
 
@@ -34,6 +35,10 @@ app.get('/beers', beerController.getBeers);
 app.get('/beers/:beer_id', beerController.getBeer);
 app.put('/beers/:beer_id', beerController.putBeer);
 app.delete('/beers/:beer_id', beerController.deleteBeer);
+
+//Users
+app.post('/users', userController.postUsers);
+app.get('/users', userController.getUsers);
 
 // Start the server
 app.listen(app.get('port'), function() {
