@@ -2,6 +2,8 @@
 var express = require('express'),
     mongoose = require('mongoose'),
     bodyParser = require('body-parser'),
+    passport = require('passport'),
+    authController = require('./controllers/auth'),
     beerController = require('./controllers/beer'),
     userController = require('./controllers/user');
 
@@ -16,6 +18,8 @@ app.use(bodyParser.urlencoded({
 
 app.use(bodyParser.json());
 
+app.use(passport.initialize());
+
 // Use environment defined port or 3000
 app.set('port', (process.env.PORT || 5000));
 
@@ -28,17 +32,17 @@ app.get('/', function(req, res) {
 });
 
 //Beers
-app.post('/beers', beerController.postBeers);
-app.get('/beers', beerController.getBeers);
+app.post('/beers', authController.isAuthenticated, beerController.postBeers);
+app.get('/beers', authController.isAuthenticated, beerController.getBeers);
 
 //Beer by ID
-app.get('/beers/:beer_id', beerController.getBeer);
-app.put('/beers/:beer_id', beerController.putBeer);
-app.delete('/beers/:beer_id', beerController.deleteBeer);
+app.get('/beers/:beer_id', authController.isAuthenticated, beerController.getBeer);
+app.put('/beers/:beer_id', authController.isAuthenticated, beerController.putBeer);
+app.delete('/beers/:beer_id', authController.isAuthenticated, beerController.deleteBeer);
 
 //Users
 app.post('/users', userController.postUsers);
-app.get('/users', userController.getUsers);
+app.get('/users', authController.isAuthenticated, userController.getUsers);
 
 // Start the server
 app.listen(app.get('port'), function() {
