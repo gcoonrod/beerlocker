@@ -13,10 +13,7 @@ app.get('/', function(req, res) {
   res.json({ message: 'You are running dangerously low on beer!' });
 });
 
-// Register all our routes with /api
-app.use('/api', router);
-
 // Start the server
 app.listen(app.get('port'), function(){
-    console.log('Insert beer on port ' + port);
+    console.log('Insert beer on port ' + app.get('port'));
 });
