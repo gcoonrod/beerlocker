@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "0.12.2"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/gcoonrod/beerlocker.git"
@@ -15,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/gcoonrod/beerlocker/issues"
   },
-  "homepage": "https://github.com/gcoonrod/beerlocker"
+  "homepage": "https://github.com/gcoonrod/beerlocker",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
 }
